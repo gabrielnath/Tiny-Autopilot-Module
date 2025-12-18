@@ -30,12 +30,17 @@ You’ll need GNAT to compile and run the Ada version of the project. Here’s h
 
 ```bash
 gnatmake Tiny_Autopilot.adb
-./Tiny_EGT    # Windows: Tiny_EGT.exe
+./Tiny_Autopilot    # Windows: Tiny_Autopilot.exe
 ```
 
 ### Python
 ```bash
 python Tiny_Autopilot.py
+```
+
+### Go
+```bash
+go run Tiny_Autopilot.go
 ```
 
 ## Notes
