@@ -22,14 +22,20 @@ For this project, I’ve tried to follow JSF-inspired principles to write cleane
 
 ## How to Run
 
+### Ada
 You’ll need GNAT to compile and run the Ada version of the project. Here’s how to get started:
 
 1. Install GNAT if you don’t have it.
 2. Compile and run the Ada version:
 
 ```bash
-gnatmake Tiny_EGT.adb
+gnatmake Tiny_Autopilot.adb
 ./Tiny_EGT    # Windows: Tiny_EGT.exe
+```
+
+### Python
+```bash
+python Tiny_Autopilot.py
 ```
 
 ## Notes
