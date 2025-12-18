@@ -78,35 +78,99 @@ procedure Tiny_Autopilot is
       end if;
    end Control_Heading;
 
-   procedure Apply_Random_Disturbance is
-   Disturbance : Integer := Integer(Rand * Float(Sudden_Range));
-   begin
-      if Disturbance = Disturbance_Chance then
-         case Integer(Rand * 3) is
-            when 0 => Apply_Altitude_Disturbance;
-            when 1 => Apply_Speed_Disturbance;
-            when 2 => Apply_Heading_Disturbance;
-            when others => null;
-         end case;
-      end if;
-   end Apply_Random_Disturbance;
+   -- ===============================
+   -- Standard Disturbance Types
+   -- ===============================
 
+   -- Altitude Disturbance
    procedure Apply_Altitude_Disturbance is
    begin
       Altitude := Altitude + (Integer(Rand * Float(Max_Altitude_Delta)) - Max_Altitude_Delta/2);
    end Apply_Altitude_Disturbance;
 
+   -- Speed Disturbance
    procedure Apply_Speed_Disturbance is
    begin
       Speed := Speed + (Integer(Rand * Float(Max_Speed_Delta)) - Max_Speed_Delta/2);
    end Apply_Speed_Disturbance;
 
+   -- Heading Disturbance
    procedure Apply_Heading_Disturbance is
    begin
       Heading := Heading + (Integer(Rand * Float(Max_Heading_Delta)) - Max_Heading_Delta/2);
    end Apply_Heading_Disturbance;
 
-    procedure Log_Flight_Status(Altitude, Speed, Heading: Integer) is
+   -- ===============================
+   -- New Disturbance Types
+   -- ===============================
+
+   -- Wind Gusts: Sudden changes in speed or heading due to wind.
+   procedure Apply_Wind_Gust is
+      Wind_Change : Integer := Integer(Rand * Float(Max_Speed_Delta));
+   begin
+      if Wind_Change > 0 then
+         Put_Line("Wind gust increasing speed");
+      else
+         Put_Line("Wind gust decreasing speed");
+      end if;
+
+      Speed := Speed + Wind_Change;
+
+   end Apply_Wind_Gust;
+
+   -- Engine Failure: Speed is reduced significantly.
+   procedure Apply_Engine_Failure is
+   begin
+      Put_Line("Engine failure: Speed reduced");
+      Speed := Speed - 50;          -- Significant drop in speed
+   end Apply_Engine_Failure;
+
+   -- Altitude Pressure Drop: Rapid descend due to pressure drop.
+   procedure Apply_Pressure_Drop is
+   begin
+      Put_Line("Altitude pressure drop: Rapid descend");
+      Altitude := Altitude - 2000;  -- Rapid descend
+   end Apply_Pressure_Drop;
+
+   -- Electrical Failure: Heading or speed may freeze or behave erratically.
+   procedure Apply_Electrical_Failure is
+   begin
+      Put_Line("Electrical failure: Heading frozen");    -- Freeze heading to initial value
+      Heading := Base_Heading;
+   end Apply_Electrical_Failure;
+
+   -- Weather Turbulence: Affects all parameters randomly.
+   procedure Apply_Weather_Turbulance is
+   begin
+      Put_Line("Weather turbulence affecting all parameters");
+      Altitude := Altitude + (Integer(Rand * Float(Max_Altitude_Delta)) - Max_Altitude_Delta / 2);
+      Speed := Speed + (Integer(Rand * Float(Max_Speed_Delta)) - Max_Speed_Delta / 2);
+      Heading := Heading + (Integer(Rand * Float(Max_Heading_Delta)) - Max_Heading_Delta / 2);
+   end Apply_Weather_Turbulance;
+
+   -- ===============================
+   -- Random Disturbance Logic
+   -- ===============================
+
+   procedure Apply_Random_Disturbance is
+   Disturbance : Integer := Integer(Rand * Float(Sudden_Range));
+   begin
+      if Disturbance = Disturbance_Chance then
+         case Integer(Rand * 8) is
+            when 0 => Apply_Altitude_Disturbance;
+            when 1 => Apply_Speed_Disturbance;
+            when 2 => Apply_Heading_Disturbance;
+            when 3 => Apply_Wind_Gust;
+            when 4 => Apply_Engine_Failure;
+            when 5 => Apply_Pressure_Drop;
+            when 6 => Apply_Electrical_Failure;
+            when 7 => Apply_Weather_Turbulance;
+            when others => null;
+         end case;
+      end if;
+   end Apply_Random_Disturbance;
+
+   procedure Log_Flight_Status(Altitude, Speed, Heading: Integer) is
    begin
       Put_Line("Altitude: " & Integer'Image(Altitude) &
                " | Speed: " & Integer'Image(Speed) &
